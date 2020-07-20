@@ -19,19 +19,16 @@ stages:
   - job: Building
     pool:
       vmImage: 'ubuntu-latest'
-    strategy:
-      matrix:
-        Python27:
-          python.version: '2.7'
-        Python35:
-          python.version: '3.5'
-    variables:
-      version: 1.$
     steps:
+    - task: FileTransform@2
+      inputs:
+        folderPath: '$(Build.SourcesDirectory)/'
+        xmlTransformationRules: 
+        jsonTargetFiles: '**/metadata.json'
     - task: UsePythonVersion@0
       displayName: 'Using Python $(python.version)'
       inputs:
-        versionSpec: '$(python.version)'
+        versionSpec: '3.6'
     - script: |
         python -m pip install -U pipenv
         make init
