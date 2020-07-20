@@ -2,7 +2,7 @@
 [![version](https://img.shields.io/pypi/v/pygame-minesweeper-sprites)](https://pypi.org/project/pygame-minesweeper-sprites/)
 [![downloads](https://img.shields.io/pypi/dd/pygame-minesweeper-sprites)](https://pypi.org/project/pygame-minesweeper-sprites/)
 
-# Intro
+# Introduction
 A sprite sheet is an image that consists of several smaller images (sprites) and/or animations. Combining the small images in one big image improves the game performance, reduces the memory usage and speeds up the startup time of the game.
 
 This repository contains a pygame library for easy loading of various sprite sheets from the game minesweeper.
