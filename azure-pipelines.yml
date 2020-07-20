@@ -6,32 +6,61 @@
 trigger:
 - master
 
-pool:
-  vmImage: 'ubuntu-latest'
-strategy:
-  matrix:
-    Python27:
-      python.version: '2.7'
-    Python35:
-      python.version: '3.5'
-    Python36:
-      python.version: '3.6'
-    Python37:
-      python.version: '3.7'
-    python38:
-      python.version: '3.8'
+name: 1.0.$(rev:r)
 
-steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '$(python.version)'
-  displayName: 'Use Python $(python.version)'
+variables:
+  artifactName: 'python-egg'
+  version: $(Build.BuildNumber)
 
-- script: |
-    python -m pip install -U pipenv
-  displayName: 'Install dependencies'
+stages:
+- stage: ContinuousIntegration
+  displayName: 'Continuous Integration'
+  jobs:
+  - job: Building
+    pool:
+      vmImage: 'ubuntu-latest'
+    strategy:
+      matrix:
+        Python27:
+          python.version: '2.7'
+        Python35:
+          python.version: '3.5'
+        Python36:
+          python.version: '3.6'
+        Python37:
+          python.version: '3.7'
+        python38:
+          python.version: '3.8'
+    variables:
+      version: 1.$
+    steps:
+    - task: UsePythonVersion@0
+      displayName: 'Using Python $(python.version)'
+      inputs:
+        versionSpec: '$(python.version)'
+    - script: |
+        python -m pip install -U pipenv
+        make init
+      displayName: 'Restoring dependencies'
+    - script: make test
+      displayName: 'Runnings tests'
+    - script: make egg
+      displayName: 'Creating Python egg'
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(Build.Repository.LocalPath)/dist'
+        artifact: '$(artifactName)'
+        publishLocation: 'pipeline'
 
-- script: |
-    pip install pytest pytest-azurepipelines
-    pytest
-  displayName: 'pytest'
+- stage: ContinuousDelivery
+  displayName: 'Continuous Delivery'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  jobs:
+  - deployment: Publishing
+    displayName: 'Publishing'
+    environment: 'Elitekollektivet'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            
