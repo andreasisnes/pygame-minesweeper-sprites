@@ -17,6 +17,9 @@ publish:
 	@$(ENV) run twine check dist/*
 	@$(ENV) run twine upload dist/*
 
+version:
+	pipenv run python --version
+
 clean:
 	@find . -type f -name ".mypy_cache" -print0 | xargs -r0 -- rm -r
 	@find . -type d -name ".pytest_cache" -print0 | xargs -r0 -- rm -r
