@@ -63,6 +63,6 @@ stages:
             displayName: 'Authenticating Pypi'
             inputs:
               pythonUploadServiceConnection: $(pypiIndex)
-          - script: python -m twine upload  run twine upload --repository $(pypiIndex) --config-file $(PYPIRC_PATH) dist/*
+          - script: python -m twine upload --repository $(pypiIndex) --config-file $(PYPIRC_PATH) dist/*
             displayName: 'Publishing Python egg'
             
