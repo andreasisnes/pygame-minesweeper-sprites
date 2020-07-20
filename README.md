@@ -23,7 +23,7 @@ There are three types of sprite sheets *score*, *face*, and *tile*. Each type of
 ## Score
 These two *score* sprite sheets have the same dimension 130 x 23. A single-digit image has a dimension of 13 x 23.
 | Spritesheet | Name |
-| -------| ----|------|
+| -------| ----|
 |![image info](./minesweeper/images/scores/2000.png) | two_thousand |
 |![image info](./minesweeper/images/scores/monochrome.png) | monochrome |
 
@@ -82,7 +82,7 @@ The result from the code snippet above.
 ## Smiley Face
 These two smile face sprite sheets have the same dimension 120 x 24. A face has a dimension of 24 x 24.
 | Spritesheet | Name |
-| -------| ----|------|
+| -------| ----|
 |![image info](./minesweeper/images/faces/2000.png) | two_thousand |
 |![image info](./minesweeper/images/faces/monochrome.png) | monochrome |
 
@@ -120,7 +120,7 @@ The same pattern applies here as above, we have a FaceSheet class and a builder 
 ## Tiles
 These tile sprite sheets have the same dimension 128 x 32. A single tile has the dimension 16 x 16.
 | Spritesheet | Name |
-| -------| ----|------|
+| -------| ----|
 |![image info](./minesweeper/images/tiles/2.0.png) | two |
 |![image info](./minesweeper/images/tiles/2.9.png) | two_nine |
 |![image info](./minesweeper/images/tiles/95.png) | ninety_five |
@@ -179,7 +179,7 @@ if __name__ == "__main__":
     view_tiles(screen)
 ```
 
-Same pattern applies here as the others, it also possible to index the class with number 0 or string "0", it will return *tile.empty* tile.  
+Same pattern applies here as the others, it also possible to index the class with number 0 or string "0", it will return *tile.empty*.
 
 ![image info](./screenshots/tile.png)
 
