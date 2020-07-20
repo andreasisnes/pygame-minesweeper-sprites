@@ -52,8 +52,10 @@ stages:
       runOnce:
         deploy:
           steps:
+          - script: python -m pip install --user --upgrade twine
+            displayName: 'Installing twine'
           - task: TwineAuthenticate@1
-            displayName: 'Pypi authenticating'
+            displayName: 'Authenticating Pypi'
             inputs:
               pythonUploadServiceConnection: 'pygame-minesweeper-sprites'
           - script: |
