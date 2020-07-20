@@ -39,7 +39,7 @@ stages:
     - script: make egg
       displayName: 'Creating Python egg'
     - task: PublishPipelineArtifact@1
-      displayName: 'Publish artifact'
+      displayName: 'Publishing artifact'
       inputs:
         targetPath: '$(Build.Repository.LocalPath)/dist'
         artifact: '$(artifactName)'
