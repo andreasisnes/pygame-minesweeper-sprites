@@ -50,7 +50,7 @@ stages:
         artifact: 'kake'
         publishLocation: 'pipeline'
     - script: |
-        pipenv run twine upload --verbose --config-file $(PYPIRC_PATH) dist/*
+        pipenv run twine upload --repository pygame-minesweeper-sprites --config-file $(PYPIRC_PATH) dist/*
       displayName: 'Publishing Python egg'
     
 
