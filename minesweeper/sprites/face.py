@@ -1,4 +1,4 @@
-from spritesheet import spritesheet_faces, SpritesheetIndex, SpritesheetBuilder
+from .spritesheet import spritesheet_faces, SpritesheetIndex, SpritesheetBuilder
 from pygame import Surface
 
 _face_cache = { }
@@ -6,8 +6,14 @@ _face_cache = { }
 class FaceSheets:
     two_thousand = "2000"
     monochrome = "monochrome"
+    __sheets__ = [
+        two_thousand,
+        monochrome
+    ]
     def __init__(self, sheet : str):
-        self._sheet = sheet
+        if str(sheet) not in self.__sheets__:
+            raise ValueError("Argument 'sheet = {}' is not valid. Must be either {}".format(sheet, self.__sheets__))
+        self._sheet = str(sheet)
     
     def __str__(self):
         return self._sheet
@@ -40,18 +46,21 @@ class FaceBuilder(SpritesheetBuilder):
     def __init__(self, sheet=FaceSheets(FaceSheets.two_thousand)):
         super().__init__(sheet, FaceSheets)
 
-    def smile(self, sheet : FaceSheets) -> Surface:
+    def smile(self, sheet : FaceSheets):
         self.__setter__(sheet, self.smile.__name__, 0)
         return self
-    def smile_click(self, sheet : FaceSheets) -> Surface:
+    def smile_click(self, sheet : FaceSheets):
         self.__setter__(sheet, self.smile_click.__name__, 1)
         return self
-    def excited(self, sheet : FaceSheets) -> Surface:
+    def excited(self, sheet : FaceSheets):
         self.__setter__(sheet, self.excited.__name__, 2)
         return self
-    def winner(self, sheet : FaceSheets) -> Surface:
+    def winner(self, sheet : FaceSheets):
         self.__setter__(sheet, self.winner.__name__, 3)
         return self
-    def dead(self, sheet : FaceSheets) -> Surface:
+    def dead(self, sheet : FaceSheets):
         self.__setter__(sheet, self.dead.__name__, 4)
         return self
+
+    def build(self):
+        return Face(self._sheet)

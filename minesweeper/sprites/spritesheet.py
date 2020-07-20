@@ -1,5 +1,3 @@
-""" Minesweeper util """
-
 from os.path import join, dirname
 import pygame
 import copy
@@ -27,12 +25,6 @@ class Spritesheet:
     def images_at(self, rects, colorkey=None):
         "Loads multiple images, supply a list of coordinates"
         return [self.image_at(rect, colorkey) for rect in rects]
-
-    def load_strip(self, rect, image_count, colorkey=None):
-        "Loads a strip of images and returns them as a list"
-        tups = [(rect[0]+rect[2]*x, rect[1], rect[2], rect[3])
-                for x in range(image_count)]
-        return self.images_at(tups, colorkey)
 
     def load_grid(self, grid, colorkey=None):
         "load grids of images and returns them as a list"
@@ -73,11 +65,8 @@ class SpritesheetBuilder:
     def __type_error__(self):
         raise TypeError("Argument 'sheet' is not of type '{}'".format(self._sheet_type.__name__))
 
-    def build(self):
-        return self._sheet_type(self._sheet)
-
 def new_spritesheet(folder : str, file : str) -> Spritesheet:
-    return Spritesheet(join(dirname(__file__), "images", folder, file + ".png"))
+    return Spritesheet(join(dirname(dirname(__file__)), "images", folder, file + ".png"))
 
 def spritesheet_faces(file : str) -> Spritesheet:
     return new_spritesheet("faces", file)

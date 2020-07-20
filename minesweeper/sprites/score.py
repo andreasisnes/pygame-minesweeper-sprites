@@ -1,4 +1,4 @@
-from spritesheet import spritesheet_scores, SpritesheetIndex, SpritesheetBuilder
+from .spritesheet import spritesheet_scores, SpritesheetIndex, SpritesheetBuilder
 from pygame import Surface
 import pygame
 
@@ -7,12 +7,18 @@ _score_cache = { }
 class ScoreSheets:
     two_thousand = "2000"
     monochrome = "monochrome"
-    def __init__(self, sheet : str):
-        self._sheet = sheet
     
+    __sheets__ = [
+        two_thousand,
+        monochrome
+    ]
+    
+    def __init__(self, sheet : str):
+        if str(sheet) not in self.__sheets__:
+            raise ValueError("Argument 'sheet = {}' is not valid. Must be either {}".format(sheet, self.__sheets__))
+        self._sheet = str(sheet)    
     def __str__(self):
         return self._sheet
-
 
 class Score:
     def __init__(self, scores : dict):
@@ -104,11 +110,5 @@ class ScoreBuilder(SpritesheetBuilder):
     def nine(self, sheet : ScoreSheets) -> 'TileBuilder':
         self.__setter__(sheet, self.nine.__name__, 9)
         return self
-    
-
-if __name__ == "__main__":
-    pygame.init()
-    pygame.font.init()
-    pygame.display.set_caption("Minesweeper")
-    resolution = (700, 700)
-    screen = pygame.display.set_mode(resolution)
+    def build(self):
+        return Score(self._sheet)

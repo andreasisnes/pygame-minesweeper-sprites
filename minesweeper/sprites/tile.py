@@ -1,4 +1,4 @@
-from spritesheet import spritesheet_tiles, SpritesheetIndex, SpritesheetBuilder
+from .spritesheet import spritesheet_tiles, SpritesheetIndex, SpritesheetBuilder
 from pygame import Surface
 import pygame
 
@@ -14,8 +14,21 @@ class TileSheets:
     fiorito_monochrome = "fiorito-monochrome"
     fiorito_xp = "fiorito-xp"
     monochrome = "monochrome"
+
+    __sheets__ = [
+        two,
+        two_nine,
+        ninety_five,
+        two_thousand,
+        fiorito_two_thousand,
+        fiorito_monochrome,
+        fiorito_xp,
+        monochrome
+    ]
     def __init__(self, sheet : str):
-        self._sheet = sheet
+        if str(sheet) not in self.__sheets__:
+            raise ValueError("Argument 'sheet = {}' is not valid. Must be either {}".format(sheet, self.__sheets__))
+        self._sheet = str(sheet)
 
     def __str__(self):
         return self._sheet
@@ -23,6 +36,18 @@ class TileSheets:
 class Tile:
     def __init__(self, tiles : dict):
         self._tiles = tiles
+        self._num2method = {
+            "0" : lambda: self.empty,
+            "1" : lambda: self.one,
+            "2" : lambda: self.two,
+            "3" : lambda: self.three,
+            "4" : lambda: self.four,
+            "5" : lambda: self.five,
+            "6" : lambda: self.six,
+            "7" : lambda: self.seven,
+            "8" : lambda: self.eight,
+        }
+
     @property
     def unopened(self) -> Surface:
         return self.__load__(self._tiles["unopened"])
@@ -77,15 +102,20 @@ class Tile:
         if sheet not in _tile_cache:
             _tile_cache[sheet] = spritesheet_tiles(sheet).load_grid((8, 2))
         return _tile_cache[sheet][tile_index.index]
+    
+    def __getitem__(self, value : int):
+        if int(value) >= 0 and  int(value) < 9:
+            return self._num2method[str(value)]()
+        raise ValueError("Argument 'value = {}' must be in range 0 < value < 9".format(value))
 
 class TileBuilder(SpritesheetBuilder):
     def __init__(self, sheet=TileSheets(TileSheets.two_thousand)):
         super().__init__(sheet, TileSheets)
 
-    def unopened(self, sheet : TileSheets)  -> 'TileBuilder':
+    def unopened(self, sheet : TileSheets) -> 'TileBuilder':
         self.__setter__(sheet, self.unopened.__name__, 0)
         return self
-    def empty(self, sheet : TileSheets)  -> 'TileBuilder':
+    def empty(self, sheet : TileSheets) -> 'TileBuilder':
         self.__setter__(sheet, self.empty.__name__, 1)
         return self
     def flag(self, sheet : TileSheets) -> 'TileBuilder':
@@ -130,15 +160,5 @@ class TileBuilder(SpritesheetBuilder):
     def eight(self, sheet : TileSheets) -> 'TileBuilder':
         self.__setter__(sheet, self.eight.__name__, 15)
         return self
-
-if __name__ == "__main__":
-    pygame.init()
-    pygame.font.init()
-    pygame.display.set_caption("Minesweeper")
-    resolution = (700, 700)
-    screen = pygame.display.set_mode(resolution)
-    clock = pygame.time.Clock()
-    t = TileBuilder()
-    f = t.build().one
-    screen.blit(f, (0, 0))
-    pygame.display.update()
+    def build(self):
+        return Tile(self._sheet)
