@@ -1,6 +1,6 @@
 ENV=pipenv
 
-.PHONY: init test egg publish clean
+.PHONY: all init test egg publish clean
 
 all: init test egg publish
 
@@ -15,10 +15,7 @@ egg:
 
 publish:
 	@$(ENV) run twine check dist/*
-	@$(ENV) run twine upload dist/*
-
-version:
-	pipenv run python --version
+	@$(ENV) run twine upload --repository pygame-minesweeper-sprites --config-file /home/sb1a.sparebank1.no/a504a0n/pytestirc dist/*
 
 clean:
 	@find . -type f -name ".mypy_cache" -print0 | xargs -r0 -- rm -r
