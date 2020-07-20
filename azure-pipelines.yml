@@ -35,11 +35,19 @@ stages:
       displayName: 'Restoring dependencies'
     - script: make egg
       displayName: 'Creating Python egg'
+    - task: TwineAuthenticate@1
+      displayName: 'Authenticating Pypi'
+      inputs:
+        pythonUploadServiceConnection: 'pygame-minesweeper-sprites'
+    - script: |
+        python -m twine upload --config-file $(PYPIRC_PATH) '$(Pipeline.Workspace)/$(artifactName)/*.whl'
+      displayName: 'Publishing Python egg'
     - task: PublishPipelineArtifact@1
       inputs:
         targetPath: '$(Build.Repository.LocalPath)/dist'
         artifact: '$(artifactName)'
         publishLocation: 'pipeline'
+    
 
 - stage: ContinuousDelivery
   displayName: 'Continuous Delivery'
@@ -54,11 +62,4 @@ stages:
           steps:
           - script: python -m pip install --user --upgrade twine
             displayName: 'Installing twine'
-          - task: TwineAuthenticate@1
-            displayName: 'Authenticating Pypi'
-            inputs:
-              pythonUploadServiceConnection: 'pygame-minesweeper-sprites'
-          - script: |
-              python -m twine upload --config-file $(PYPIRC_PATH) '$(Pipeline.Workspace)/$(artifactName)/*.whl'
-            displayName: 'Publishing Python egg'
             
