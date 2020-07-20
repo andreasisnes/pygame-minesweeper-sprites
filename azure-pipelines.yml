@@ -11,6 +11,8 @@ name: 1.0.$(rev:r)
 variables:
   artifactName: 'python-egg'
   version: $(Build.BuildNumber)
+  pypiIndex: pygame-minesweeper-sprites
+  pythonVersion: '3.6'
 
 stages:
 - stage: ContinuousIntegration
@@ -19,32 +21,30 @@ stages:
   - job: Building
     pool:
       vmImage: 'ubuntu-latest'
-    strategy:
-      matrix:
-        Python27:
-          python.version: '2.7'
-        Python35:
-          python.version: '3.5'
-    variables:
-      version: 1.$
     steps:
     - task: UsePythonVersion@0
-      displayName: 'Using Python $(python.version)'
+      displayName: 'Using Python ${{ variables.pythonVersion }}'
       inputs:
-        versionSpec: '$(python.version)'
+        versionSpec: $(pythonVersion)
+    - task: FileTransform@2
+      displayName: 'Setting metadata'
+      inputs:
+        folderPath: '$(Build.SourcesDirectory)/'
+        xmlTransformationRules: 
+        jsonTargetFiles: '**/metadata.json'
     - script: |
         python -m pip install -U pipenv
         make init
       displayName: 'Restoring dependencies'
-    - script: pipenv run python --version
     - script: make egg
       displayName: 'Creating Python egg'
     - task: PublishPipelineArtifact@1
+      displayName: 'Publishing artifact'
       inputs:
         targetPath: '$(Build.Repository.LocalPath)/dist'
         artifact: '$(artifactName)'
         publishLocation: 'pipeline'
-
+   
 - stage: ContinuousDelivery
   displayName: 'Continuous Delivery'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -56,11 +56,16 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: TwineAuthenticate@1
-            displayName: 'Pypi authenticating'
+          - task: UsePythonVersion@0
+            displayName: 'Using Python ${{ variables.pythonVersion }}'
             inputs:
-              pythonUploadServiceConnection: 'pygame-minesweeper-sprites'
-          - script: |
-              python -m twine upload --config-file $(PYPIRC_PATH) '$(Pipeline.Workspace)/$(artifactName)/*.whl'
+              versionSpec: $(pythonVersion)
+          - script: python -m pip install --user --upgrade twine
+            displayName: 'Installing twine'
+          - task: TwineAuthenticate@1
+            displayName: 'Authenticating Pypi'
+            inputs:
+              pythonUploadServiceConnection: $(pypiIndex)
+          - script: python -m twine upload --repository $(pypiIndex) --config-file $(PYPIRC_PATH) $(Pipeline.Workspace)/$(artifactName)/*
             displayName: 'Publishing Python egg'
             
