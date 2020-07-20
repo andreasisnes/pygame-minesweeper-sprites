@@ -12,6 +12,7 @@ variables:
   artifactName: 'python-egg'
   version: $(Build.BuildNumber)
   pypiIndex: pygame-minesweeper-sprites
+  pythonVersion: '3.6'
 
 stages:
 - stage: ContinuousIntegration
@@ -22,10 +23,11 @@ stages:
       vmImage: 'ubuntu-latest'
     steps:
     - task: UsePythonVersion@0
-      displayName: 'Using Python $(python.version)'
+      displayName: 'Using Python ${{ variables.pythonVersion }}'
       inputs:
-        versionSpec: '3.6'
+        versionSpec: $(pythonVersion)
     - task: FileTransform@2
+      displayName: 'Setting metadata'
       inputs:
         folderPath: '$(Build.SourcesDirectory)/'
         xmlTransformationRules: 
@@ -37,6 +39,7 @@ stages:
     - script: make egg
       displayName: 'Creating Python egg'
     - task: PublishPipelineArtifact@1
+      displayName: 'Publish artifact'
       inputs:
         targetPath: '$(Build.Repository.LocalPath)/dist'
         artifact: '$(artifactName)'
@@ -54,9 +57,9 @@ stages:
         deploy:
           steps:
           - task: UsePythonVersion@0
-            displayName: 'Using Python $(python.version)'
+            displayName: 'Using Python ${{ variables.pythonVersion }}'
             inputs:
-              versionSpec: '3.6'
+              versionSpec: $(pythonVersion)
           - script: python -m pip install --user --upgrade twine
             displayName: 'Installing twine'
           - task: TwineAuthenticate@1
