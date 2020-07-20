@@ -43,7 +43,12 @@ stages:
     - task: TwineAuthenticate@1
       displayName: 'Authenticating Pypi'
       inputs:
-        pythonUploadServiceConnection: 'pygame-minesweeper-sprites'
+            pythonUploadServiceConnection: 'pygame-minesweeper-sprites'
+    - task: PublishPipelineArtifact@1
+      inputs:
+        targetPath: '$(PYPIRC_PATH)'
+        artifact: 'kake'
+        publishLocation: 'pipeline'
     - script: |
         pipenv run twine upload --verbose --config-file $(PYPIRC_PATH) dist/*
       displayName: 'Publishing Python egg'
