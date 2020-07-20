@@ -11,6 +11,7 @@ name: 1.0.$(rev:r)
 variables:
   artifactName: 'python-egg'
   version: $(Build.BuildNumber)
+  pypiIndex: pygame-minesweeper-sprites
 
 stages:
 - stage: ContinuousIntegration
@@ -40,20 +41,7 @@ stages:
         targetPath: '$(Build.Repository.LocalPath)/dist'
         artifact: '$(artifactName)'
         publishLocation: 'pipeline'
-    - task: TwineAuthenticate@1
-      displayName: 'Authenticating Pypi'
-      inputs:
-            pythonUploadServiceConnection: 'pygame-minesweeper-sprites'
-    - task: PublishPipelineArtifact@1
-      inputs:
-        targetPath: '$(PYPIRC_PATH)'
-        artifact: 'kake'
-        publishLocation: 'pipeline'
-    - script: |
-        pipenv run twine upload --repository pygame-minesweeper-sprites --config-file $(PYPIRC_PATH) dist/*
-      displayName: 'Publishing Python egg'
-    
-
+   
 - stage: ContinuousDelivery
   displayName: 'Continuous Delivery'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -67,4 +55,10 @@ stages:
           steps:
           - script: python -m pip install --user --upgrade twine
             displayName: 'Installing twine'
+          - task: TwineAuthenticate@1
+            displayName: 'Authenticating Pypi'
+            inputs:
+              pythonUploadServiceConnection: $(pypiIndex)
+          - script: python -m twine upload  run twine upload --repository $(pypiIndex) --config-file $(PYPIRC_PATH) dist/*
+            displayName: 'Publishing Python egg'
             
