@@ -18,6 +18,8 @@ strategy:
       python.version: '3.6'
     Python37:
       python.version: '3.7'
+    python38:
+      python.version: '3.8'
 
 steps:
 - task: UsePythonVersion@0
@@ -26,8 +28,7 @@ steps:
   displayName: 'Use Python $(python.version)'
 
 - script: |
-    python -m pip install --upgrade pip
-    pip install -r requirements.txt
+    python -m pip install -U pipenv
   displayName: 'Install dependencies'
 
 - script: |
