@@ -53,6 +53,10 @@ stages:
       runOnce:
         deploy:
           steps:
+          - task: UsePythonVersion@0
+            displayName: 'Using Python $(python.version)'
+            inputs:
+              versionSpec: '3.6'
           - script: python -m pip install --user --upgrade twine
             displayName: 'Installing twine'
           - task: TwineAuthenticate@1
