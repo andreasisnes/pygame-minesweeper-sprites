@@ -20,20 +20,19 @@ stages:
     pool:
       vmImage: 'ubuntu-latest'
     steps:
+    - task: UsePythonVersion@0
+      displayName: 'Using Python $(python.version)'
+      inputs:
+        versionSpec: '3.6'
     - task: FileTransform@2
       inputs:
         folderPath: '$(Build.SourcesDirectory)/'
         xmlTransformationRules: 
         jsonTargetFiles: '**/metadata.json'
-    - task: UsePythonVersion@0
-      displayName: 'Using Python $(python.version)'
-      inputs:
-        versionSpec: '3.6'
     - script: |
         python -m pip install -U pipenv
         make init
       displayName: 'Restoring dependencies'
-    - script: pipenv run python --version
     - script: make egg
       displayName: 'Creating Python egg'
     - task: PublishPipelineArtifact@1
