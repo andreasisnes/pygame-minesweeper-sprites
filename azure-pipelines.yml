@@ -45,7 +45,7 @@ stages:
       inputs:
         pythonUploadServiceConnection: 'pygame-minesweeper-sprites'
     - script: |
-        'pipenv run twine upload --config-file $(PYPIRC_PATH) dist/*.whl'
+        'pipenv run twine upload dist/*.whl'
       displayName: 'Publishing Python egg'
     
 
