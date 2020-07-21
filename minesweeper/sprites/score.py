@@ -1,6 +1,5 @@
 from .spritesheet import spritesheet_scores, SpritesheetIndex, SpritesheetBuilder
 from pygame import Surface
-import pygame
 
 _score_cache = {}
 

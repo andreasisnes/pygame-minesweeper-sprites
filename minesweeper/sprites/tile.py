@@ -1,6 +1,5 @@
 from .spritesheet import spritesheet_tiles, SpritesheetIndex, SpritesheetBuilder
 from pygame import Surface
-import pygame
 
 _tile_cache = {}
 
