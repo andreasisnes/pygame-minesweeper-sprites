@@ -1,6 +1,8 @@
 ENV=pipenv
 
-.PHONY: init test
+.PHONY: init test egg clean
+
+all: init test egg
 
 init:
 	@$(ENV) sync
@@ -8,6 +10,9 @@ init:
 
 test:
 	@$(ENV) run pytest --cov=minesweeper tests
+
+egg:
+	@$(ENV) run python setup.py sdist bdist_wheel
 
 clean:
 	@find . -type f -name ".mypy_cache" -print0 | xargs -r0 -- rm -r
