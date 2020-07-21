@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
 
-from os import environ
 from os.path import join, dirname
 from setuptools import setup, find_packages
 from json import load
+
 
 def read(fname):
     with open(join(dirname(__file__), fname)) as f:
         return f.read()
 
+
 def metadata(value):
     with open(join(dirname(__file__), "metadata.json")) as f:
         return load(f)[value]
+
 
 setup(
     # Package

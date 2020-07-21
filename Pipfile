@@ -7,13 +7,11 @@ verify_ssl = true
 
 [packages]
 pygame = "*"
-tox = "*"
 pytest = "*"
 pytest-cov = "*"
-pylint = "*"
 setuptools = "*"
 wheel = "*"
-twine = "*"
+pre-commit = "*"
 
 [requires]
 python_version = "3.6"
