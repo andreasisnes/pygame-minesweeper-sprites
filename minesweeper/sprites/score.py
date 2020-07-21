@@ -133,5 +133,5 @@ class ScoreBuilder(SpritesheetBuilder):
         self.__setter__(sheet, self.nine.__name__, 9)
         return self
 
-    def build(self):
+    def build(self) -> Score:
         return Score(self._sheet)

@@ -195,5 +195,5 @@ class TileBuilder(SpritesheetBuilder):
         self.__setter__(sheet, self.eight.__name__, 15)
         return self
 
-    def build(self):
+    def build(self) -> Tile:
         return Tile(self._sheet)
