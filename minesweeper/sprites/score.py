@@ -1,5 +1,6 @@
 from .spritesheet import spritesheet_scores, SpritesheetIndex, SpritesheetBuilder
 from pygame import Surface
+from typing import List
 
 _score_cache = {}
 
@@ -85,7 +86,7 @@ class Score:
             _score_cache[sheet] = spritesheet_scores(sheet).load_grid((10, 1))
         return _score_cache[sheet][score_index.index]
 
-    def __getitem__(self, value):
+    def __getitem__(self, value) -> List[Surface]:
         return [self._num2method[i]() for i in str(value)]
 
 

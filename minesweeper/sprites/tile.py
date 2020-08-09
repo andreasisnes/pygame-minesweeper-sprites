@@ -120,7 +120,7 @@ class Tile:
             _tile_cache[sheet] = spritesheet_tiles(sheet).load_grid((8, 2))
         return _tile_cache[sheet][tile_index.index]
 
-    def __getitem__(self, value: int):
+    def __getitem__(self, value: int) -> Surface:
         if int(value) >= 0 and int(value) < 9:
             return self._num2method[str(value)]()
         raise ValueError(
